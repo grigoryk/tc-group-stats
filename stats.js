@@ -17,6 +17,7 @@ function statsUiContainer() {
     div.appendChild(runBtn);
     var histogram = el("div", "gri-histogram");
     histogram.style.display = "flex";
+    histogram.style.alignItems = "flex-end";
     div.appendChild(histogram);
     var overview = el("div", "gri-overview");
     overview.style.margin = "10px";
@@ -50,6 +51,7 @@ function drawHistogram(timings) {
         bar.style.height = Math.max(5, Math.round(t) * 5) + "px";
         bar.style.width = "10px";
         bar.style.backgroundColor = "#493CFF";
+        bar.style.marginRight = "1px";
         bar.title = "Time (m): " + t;
         return bar;
     }
