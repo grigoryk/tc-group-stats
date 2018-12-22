@@ -7,7 +7,7 @@
 
   "content_scripts": [
     {
-      "matches": ["*://tools.taskcluster.net/groups/*"],
+      "matches": ["*://tools.taskcluster.net/groups/*", "*://tools.taskcluster.net/task-group-inspector/*"],
       "js": ["stats.js"]
     }
   ],
