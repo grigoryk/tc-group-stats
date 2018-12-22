@@ -15,10 +15,10 @@ function statsUiContainer() {
         fetchTimings();
     });
     div.appendChild(runBtn);
-    var histogram = el("div", "gri-histogram");
-    histogram.style.display = "flex";
-    histogram.style.alignItems = "flex-end";
-    div.appendChild(histogram);
+    var graph = el("div", "gri-graph");
+    graph.style.display = "flex";
+    graph.style.alignItems = "flex-end";
+    div.appendChild(graph);
     var overview = el("div", "gri-overview");
     overview.style.margin = "10px";
     var log = el("span", "gri-log");
@@ -43,14 +43,14 @@ function timingStats(timings) {
     };
 }
 
-function drawHistogram(timings) {
-    var div = document.getElementById("gri-histogram");
+function drawGraph(timings) {
+    var div = document.getElementById("gri-graph");
     div.innerHTML = "";
     function barDiv(t) {
         var bar = el("div");
         bar.style.height = Math.max(5, Math.round(t) * 5) + "px";
         bar.style.width = "10px";
-        bar.style.backgroundColor = "#493CFF";
+        bar.style.backgroundColor = "#006071";
         bar.style.marginRight = "1px";
         bar.title = "Time (m): " + t;
         return bar;
@@ -72,7 +72,7 @@ function setOverview(timings) {
         t = t + "<br>min: " + stats.min + "<br>max: " + stats.max + "<br>70th percentile: " + stats.perc70 + "<br>99th percentile: " + stats.perc99;
     }
     document.getElementById("gri-overview").innerHTML = t
-    drawHistogram(timings);
+    drawGraph(timings);
 }
 
 function log(message) {
