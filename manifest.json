@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+  "name": "Taskcluster Group Stats",
+  "version": "0.1",
+
+  "description": "Shows aggregate runtime stats for tasks in a task group.",
+
+  "content_scripts": [
+    {
+      "matches": ["*://tools.taskcluster.net/groups/*"],
+      "js": ["stats.js"]
+    }
+  ],
+
+  "permissions": ["https://queue.taskcluster.net/v1/task/*"]
+}
+
