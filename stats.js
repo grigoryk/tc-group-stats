@@ -64,12 +64,12 @@ function setOverview(timings) {
     var stats = timingStats(timings);
     var percDone = round(stats.count / requestedToFetch);
     if (percDone < 1) {
-        t = "Fetching... " + round(percDone * 100) + "%";
+        t = "Fetching... " + round(percDone * 100) + "%<br>";
     } else {
-        t = "Fetched all tasks."
+        t = ""
     }
     if (stats.count > 0) {
-        t = t + "<br>min: " + stats.min + "<br>max: " + stats.max + "<br>70th percentile: " + stats.perc70 + "<br>99th percentile: " + stats.perc99;
+        t = t + "min: " + stats.min + "<br>max: " + stats.max + "<br>70th percentile: " + stats.perc70 + "<br>99th percentile: " + stats.perc99;
     }
     document.getElementById("gri-overview").innerHTML = t
     drawGraph(timings);
