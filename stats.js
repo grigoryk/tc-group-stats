@@ -1,28 +1,38 @@
 var statusList = [];
 
+function el(tag, id) {
+    var elem = document.createElement(tag);
+    if (id !== undefined) { elem.id = id; }
+    return elem;
+}
+
 function statsUiContainer() {
-    var div = document.createElement("div");
-    div.id = "gri-statsContainer";
+    var div = el("div", "gri-statsContainer");
     div.style.margin = "10px";
-    var runBtn = document.createElement("button");
+    var runBtn = el("button");
     runBtn.innerHTML = "Fetch run timings";
     runBtn.addEventListener("click", function() {
         fetchTimings();
     });
     div.appendChild(runBtn);
-    var overview = document.createElement("div");
-    overview.id = "gri-overview";
+    var histogram = el("div", "gri-histogram");
+    histogram.style.display = "flex";
+    div.appendChild(histogram);
+    var overview = el("div", "gri-overview");
     overview.style.margin = "10px";
-    var log = document.createElement("span");
-    log.id = "gri-log";
+    var log = el("span", "gri-log");
     div.appendChild(overview);
     div.appendChild(log)
     var c = document.getElementById("container");
     c.parentNode.insertBefore(div, c);
 }
 
+function sort(d) {
+    return d.sort(function(a, b) { return a - b; } );
+}
+
 function timingStats(timings) {
-    var sorted = timings.sort(function(a, b){return a-b});
+    var sorted = sort(timings);
     return {
         "count": timings.length,
         "max": Math.max(...sorted),
@@ -32,13 +42,35 @@ function timingStats(timings) {
     };
 }
 
+function drawHistogram(timings) {
+    var div = document.getElementById("gri-histogram");
+    div.innerHTML = "";
+    function barDiv(t) {
+        var bar = el("div");
+        bar.style.height = Math.max(5, Math.round(t) * 5) + "px";
+        bar.style.width = "10px";
+        bar.style.backgroundColor = "#493CFF";
+        bar.title = "Time (m): " + t;
+        return bar;
+    }
+    sort(timings).forEach(function(t) {
+        div.appendChild(barDiv(t));
+    });
+}
+
 function setOverview(timings) {
     var stats = timingStats(timings);
-    var t = "completed count: " + stats.count;
+    var percDone = round(stats.count / requestedToFetch);
+    if (percDone < 1) {
+        t = "Fetching... " + round(percDone * 100) + "%";
+    } else {
+        t = "Fetched all tasks."
+    }
     if (stats.count > 0) {
-        t = t + "<br>all timings: " + timings + "<br>min: " + stats.min + "<br>max: " + stats.max + "<br>70th percentile: " + stats.perc70 + "<br>99th percentile: " + stats.perc99;
+        t = t + "<br>min: " + stats.min + "<br>max: " + stats.max + "<br>70th percentile: " + stats.perc70 + "<br>99th percentile: " + stats.perc99;
     }
     document.getElementById("gri-overview").innerHTML = t
+    drawHistogram(timings);
 }
 
 function log(message) {
@@ -71,12 +103,16 @@ function analyzeStatuses() {
     //log("timings run: " + runTimings);
 }
 
+var requestedToFetch = 0;
+
 function fetchTimings() {
     var taskLinks = document.querySelectorAll("td > a");
     var taskIds = Array.from(taskLinks).map(a => a.href.split("/")[6]);
 
+    requestedToFetch = 0;
     statusList = [];
     taskIds.forEach(function(tId) {
+        requestedToFetch += 1;
         var statusUrl = "https://queue.taskcluster.net/v1/task/" + tId + "/status";
         //log("fetching " + statusUrl);
         fetch(statusUrl)
@@ -109,24 +145,3 @@ function Quartile(data, q) {
   }
 }
 
-function Array_Sum(t){
-   return t.reduce(function(a, b) { return a + b; }, 0); 
-}
-
-function Array_Average(data) {
-  return Array_Sum(data) / data.length;
-}
-
-function Array_Stdev(tab){
-   var i,j,total = 0, mean = 0, diffSqredArr = [];
-   for(i=0;i<tab.length;i+=1){
-       total+=tab[i];
-   }
-   mean = total/tab.length;
-   for(j=0;j<tab.length;j+=1){
-       diffSqredArr.push(Math.pow((tab[j]-mean),2));
-   }
-   return (Math.sqrt(diffSqredArr.reduce(function(firstEl, nextEl){
-            return firstEl + nextEl;
-          })/tab.length));  
-}
