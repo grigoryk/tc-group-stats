@@ -96,7 +96,7 @@ function analyzeStatuses() {
         if (s.runs.length > 0) {
             var latest = s.runs[s.runs.length - 1];
             if (latest.resolved) {
-                var delta = new Date(latest.resolved) - new Date(latest.started);
+                var delta = new Date(latest.resolved) - new Date(latest.scheduled);
                 runTimings.push(round(delta / 1000 / 60));
             }
         }
