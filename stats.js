@@ -94,9 +94,10 @@ function analyzeStatuses() {
     statusList.forEach(function(s) {
         //log(s);
         if (s.runs.length > 0) {
+            var firstScheduled = s.runs[0].scheduled;
             var latest = s.runs[s.runs.length - 1];
             if (latest.resolved) {
-                var delta = new Date(latest.resolved) - new Date(latest.scheduled);
+                var delta = new Date(latest.resolved) - new Date(firstScheduled);
                 runTimings.push(round(delta / 1000 / 60));
             }
         }
