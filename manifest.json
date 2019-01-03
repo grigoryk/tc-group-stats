@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Taskcluster Group Stats",
-  "version": "0.2.1",
+  "version": "0.2.2",
 
   "description": "Shows aggregate runtime stats for tasks in a task group.",
 
